@@ -1,5 +1,6 @@
 Config = {}
 
+--CURRENTLY ONLY SUPPORTS TARGETTING WILL ADD DRAWTEXT IN FUTURE RELEASE
 Config.Debug = false
 Config.UseExports = true -- see shared/imports.lua if true this utilizes item and job exports
 
