@@ -321,6 +321,7 @@ RegisterNetEvent("k-ezjob:stashes", function(data)
             maxweight = Config.Stash[stashType].weight,
             slots = Config.Stash[stashType].slots,
         }
+        stashType = stashType.."_"..data.index
     end
     if cid then
         stashType = stashType.."_"..cid
