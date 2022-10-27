@@ -361,17 +361,17 @@ RegisterNetEvent("k-ezjob:client:station", function(data)
         if cb then
             if reward.emote then
                 TriggerEvent('animations:client:EmoteCommandStart', {reward.emote})
-                QBCore.Functions.Progressbar("station_progress"..reward.item, reward.label, reward.time, false, false, {
+                QBCore.Functions.Progressbar("station_progress"..data.item, reward.label, reward.time, false, false, {
                     disableMovement = true,
                     disableCarMovement = true,
                     disableMouse = false,
                     disableCombat = true,
                 }, {}, {}, {}, function()
                     TriggerEvent('animations:client:EmoteCommandStart', {"c"})
-                    TriggerEvent("inventory:client:ItemBox", QBCore.Shared.Items[reward.item], "add")
+                    TriggerEvent("inventory:client:ItemBox", QBCore.Shared.Items[data.item], "add")
                 end)
             else
-                QBCore.Functions.Progressbar("station_progress"..reward.item, reward.label, reward.time, false, false, {
+                QBCore.Functions.Progressbar("station_progress"..data.item, reward.label, reward.time, false, false, {
                     disableMovement = true,
                     disableCarMovement = true,
                     disableMouse = false,
@@ -387,7 +387,7 @@ RegisterNetEvent("k-ezjob:client:station", function(data)
                     rotation = reward.rot,
                     }, {}, function()
                     StopAnimTask(PlayerPedId(), reward.dict, reward.anim, 1.0)
-                    TriggerEvent("inventory:client:ItemBox", QBCore.Shared.Items[reward.item], "add")
+                    TriggerEvent("inventory:client:ItemBox", QBCore.Shared.Items[data.item], "add")
                 end)
             end
         end
