@@ -391,5 +391,5 @@ RegisterNetEvent("k-ezjob:client:station", function(data)
                 end)
             end
         end
-    end, reward)
+    end, {reward, data.item})
 end)

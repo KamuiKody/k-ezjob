@@ -58,7 +58,9 @@ RegisterServerEvent("k-ezjob:server:setregister", function(data)
     }
 end)
 
-QBCore.Functions.CreateCallback("k-ezjob:server:cb:recipe", function(source, cb, reward)
+QBCore.Functions.CreateCallback("k-ezjob:server:cb:recipe", function(source, cb, data)
+    local reward = data[1]
+    local rewardItem = data[2]
     local canMake = true
     local Player = QBCore.Functions.GetPlayer(source)
     for k, v in pairs(reward.cost) do
@@ -82,7 +84,7 @@ QBCore.Functions.CreateCallback("k-ezjob:server:cb:recipe", function(source, cb,
             end
         end
         if removed then
-            if Player.Functions.AddItem(reward.item, reward.received) then
+            if Player.Functions.AddItem(rewardItem, reward.received) then
                 cb(true)
             end
         else
