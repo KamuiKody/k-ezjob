@@ -1,7 +1,5 @@
 Config = {}
-
---CURRENTLY ONLY SUPPORTS TARGETTING WILL ADD DRAWTEXT IN FUTURE RELEASE
-Config.Debug = false
+Config.Debug = true
 Config.UseExports = true -- see shared/imports.lua if true this utilizes item and job exports
 
 Config.Labels = {
@@ -311,7 +309,7 @@ Config.Locations = {
             }
         },        
         ['activity'] = { -- in case you want a spot for someone to trigger a specific activity like for towing npc tows or what have ya
-            -- [1] = {-- not currently setup.
+            -- [1] = {
             --     coord = vector4(0,0,0,0),
             --     label = 'This is a test',
             --     event = 'k-ezjob:testeventexternal',

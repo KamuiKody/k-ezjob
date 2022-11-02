@@ -1,11 +1,6 @@
-Imports = {}
-
+Imports = Imports or {}
 Imports.Cityhall = { -- this will put jobs in city hall using the following format
-    --['bishops'] = "Bishop's Chicken"
-}
-
-Imports.Boss = { 
-    ['bishops'] = 4000,
+    --['jobname'] = label
 }
 
 Imports.Jobs = { -- this will add the jobs to the jobs.lua
@@ -61,6 +56,9 @@ Imports.Items = { -- this will add the items to the items.lua
 
 -------------- Items Below this line are not implimented yet. If you are smart enough to figure them out hats off to you please do not ask for support if you are trying to use stuff below this line.
 Imports.ExperimentalUse = false
+Imports.Boss = { 
+    ['bishops'] = 4000,
+}
 
 Imports.Consumables = { -- outside of these categories you will have to make ur own uses for items and what they do. If inside a usable item will be made and a reduction value for ones needs will be added. This piece is something i have been working on it is not functional at this time thank you!
     -- ['food'] = { -- not yet available for the current qb-release updates for compatibility very soon!
@@ -79,3 +77,5 @@ Imports.Consumables = { -- outside of these categories you will have to make ur 
     -- },
     -- ['alcohol'] = {}
 }
+
+Imports.Items['thingy'] = {['name'] = 'thingy', ['label'] = 'Food Item', ['weight'] = '20', ['type'] = 'item', ['image'] = 'tosti.png', ['hunger'] = '50', ['thirst'] = 'nil', ['alcohol'] = 'nil', ['unique'] = 'true', ['useable'] = 'true', ['shouldClose'] = 'true', ['combinable'] = nil, ['description'] = 'this is a test item'}

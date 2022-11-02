@@ -6,6 +6,12 @@ RegisterNetEvent('QBCore:Server:UpdateObject', function()
 	QBCore = exports['qb-core']:GetCoreObject()
 end)
 
+RegisterNetEvent('k-ezjob:ImportUpdate', function()
+	--if source ~= '' then return false end
+	Imports = Imports
+    addStuff()
+end)
+
 RegisterServerEvent("k-ezjob:pay", function(data)
     if data.amount == 0 then return end
     local src = source
@@ -29,7 +35,7 @@ RegisterServerEvent("k-ezjob:pay", function(data)
             end
         end
     end
-    if billed.Functions.RemoveMoney(data.type,data.amount) then
+    if billed.Functions.RemoveMoney(data.type,data.amount) then    
         local commission = (data.amount * Config.Locations[data.store]['commission'])
         if data.biller then
             if data.biller ~= 0 then
@@ -50,6 +56,10 @@ RegisterServerEvent("k-ezjob:pay", function(data)
 end)
 
 RegisterServerEvent("k-ezjob:server:setregister", function(data)
+    print(data.store)
+    print(data.index)
+    print(data.biller)
+    print(data.amount)
     Registers[data.store]= {
         [data.index] = {
             amount = data.amount,
@@ -58,17 +68,16 @@ RegisterServerEvent("k-ezjob:server:setregister", function(data)
     }
 end)
 
-QBCore.Functions.CreateCallback("k-ezjob:server:cb:recipe", function(source, cb, data)
-    local reward = data[1]
-    local rewardItem = data[2]
+QBCore.Functions.CreateCallback("k-ezjob:server:cb:recipe", function(source, cb, reward)
     local canMake = true
     local Player = QBCore.Functions.GetPlayer(source)
     for k, v in pairs(reward.cost) do
         local item = Player.Functions.GetItemByName(k)
+        print(v)
         local amount = Player.Functions.GetItemByName(item.name).amount
         if not item or amount < v then
-            TriggerClientEvent('QBCore:Notify', source, 'You need '..v..' of '..QBCore.Shared.Items[k].label, 'error', 5000)
-            canMake = false
+            TriggerClientEvent('QBCore:Notify', source, 'You need '..v..' of '..QBCore.Shared.Items[k].label, 'error', 5000) 
+            canMake = false                
             return
         end
     end
@@ -78,27 +87,35 @@ QBCore.Functions.CreateCallback("k-ezjob:server:cb:recipe", function(source, cb,
             if Player.Functions.RemoveItem(k, v) then
                 TriggerClientEvent("inventory:client:ItemBox", source, QBCore.Shared.Items[k], "remove")
             else
-                TriggerClientEvent('QBCore:Notify', source, 'You need '..v..' of '..QBCore.Shared.Items[k].label, 'error', 5000)
+                TriggerClientEvent('QBCore:Notify', source, 'You need '..v..' of '..QBCore.Shared.Items[k].label, 'error', 5000) 
                 removed = false
                 return
             end
         end
         if removed then
-            if Player.Functions.AddItem(rewardItem, reward.received) then
+            if Player.Functions.AddItem(reward.item, reward.received) then
                 cb(true)
-            end
+            end            
         else
             cb(false)
-        end
+        end    
     else
-        cb(false)
+        cb(false)    
     end
 end)
 
-AddEventHandler('onResourceStart', function(resource)
+print(GetResourcePath('k-ezjob'))
+
+AddEventHandler('onResourceStart', function(resource) 
     if GetCurrentResourceName() ~= resource then return end
+    addStuff()
+end)
+
+function addStuff()
+    Wait(4000)
     for k in pairs(Config.Locations) do
         for v in pairs(Config.Locations[k]['register']) do
+            print(k,v)
             Registers[k] = {
                 [v] = {
                     biller = 0,
@@ -108,7 +125,8 @@ AddEventHandler('onResourceStart', function(resource)
         end
     end
     if Config.UseExports then
-        for k,v in pairs(Imports.Items) do		
+        QBCore.Debug(Imports.Items)	
+        for k,v in pairs(Imports.Items) do	
             exports['qb-core']:AddItem(k,v)
         end
         for k,v in pairs(Imports.Jobs) do		
@@ -119,27 +137,43 @@ AddEventHandler('onResourceStart', function(resource)
         end
         for k,v in pairs(Imports.Boss) do		
             checkDB(k,v)
-        end
-        if Imports.ExperimentalUse then
-            for u,t in pairs(Imports.Consumables) do
-                for k,v in pairs(Imports.Consumables[u]) do	
-                    if u == 'food' then		
-                        exports['qb-smallresources']:AddFood(k,v)
-                    elseif u == 'drink' then
-                        exports['qb-smallresources']:AddDrink(k,v)
-                    elseif u == 'alcohol' then
-                        exports['qb-smallresources']:AddAlcohol(k,v)
-                    end
-                end
+        end        
+        for k,v in pairs(Imports.Items) do
+            if v['alcohol'] then
+                QBCore.Functions.CreateUseableItem(k , function(source, item)
+                    local src = source
+                    local Player = QBCore.Functions.GetPlayer(src)
+                    if not Player.Functions.RemoveItem(k,1) then return end
+                    TriggerClientEvent('k-creator:UseItem', src, 'alcohol', v['alcohol'])
+                end)
+            end
+            if v['hunger'] then
+                QBCore.Functions.CreateUseableItem(k , function(source, item)
+                    local src = source
+                    local Player = QBCore.Functions.GetPlayer(src)
+                    if not Player.Functions.RemoveItem(k,1) then return end
+                    TriggerClientEvent('k-creator:UseItem', src, 'hunger', v['hunger'])
+                end)
+            end
+            if v['thirst'] then
+                QBCore.Functions.CreateUseableItem(k , function(source, item)
+                    local src = source
+                    local Player = QBCore.Functions.GetPlayer(src)
+                    if not Player.Functions.RemoveItem(k,1) then return end
+                    TriggerClientEvent('k-creator:UseItem', src, item.name,'thirst', v['thirst'])
+                end)
             end
         end
         TriggerClientEvent('QBCore:Client:UpdateObject', -1)
         TriggerEvent('QBCore:Sever:UpdateObject')
     end
-end)
+end
+
 
 QBCore.Functions.CreateCallback("k-ezjob:cb:register", function(source, cb)
-    cb(Registers)
+    Wait(0)
+    local Register = Registers
+    cb(Register)
 end)
 
 if Config.UseExports then

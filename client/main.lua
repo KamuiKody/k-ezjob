@@ -1,7 +1,10 @@
 QBCore = exports['qb-core']:GetCoreObject()
 local Blip = {}
+local PlayerData = nil
 local onDuty = false
-local hardcordedEvents ={
+local looped = false
+local alcoholCount = 0
+local hardcordedEvents = {
     ['duty'] = "k-ezjob:Duty",
     ['register'] = "k-ezjob:register",
     ['stash'] = "k-ezjob:stashes",
@@ -17,13 +20,46 @@ RegisterNetEvent('QBCore:Client:UpdateObject', function()
 	QBCore = exports['qb-core']:GetCoreObject()
 end)
 
+RegisterNetEvent('k-ezjob:Client:ImportUpdate', function()
+	Imports = Imports
+end)
+
+local function loadAnimDict(dict)
+    if HasAnimDictLoaded(dict) then return end
+    RequestAnimDict(dict)
+    while not HasAnimDictLoaded(dict) do
+        Wait(10)
+    end
+end
+
+local function AlcoholLoop()
+    if not looped then
+        looped = true
+        CreateThread(function()
+            while true do
+                Wait(10)
+                if alcoholCount > 0 then
+                    Wait(1000 * 60 * 15)
+                    alcoholCount = alcoholCount - 1
+                else
+                    SetPedMovementClipset(PlayerPedId(),'move_m@casual@d',1.0)
+                    looped = false
+                    break
+                end
+            end
+        end)
+    end
+end
+
 local function createZones()
     for k,t in pairs(Config.Locations) do
         for v,u in pairs(t) do
-            local PlayerData = QBCore.Functions.GetPlayerData()
+            --print(#u)
+            PlayerData = QBCore.Functions.GetPlayerData()
             if v ~= 'blip' and v ~= 'commission' then
                 for i = 1,#u do
                     if v == 'duty' or v == 'stash' or v == 'job_stash' or v == 'clothing' then
+                        --print(u[i])
                         exports['qb-target']:AddBoxZone(k.."_"..v.."_"..i, vector3(u[i].x, u[i].y, u[i].z), 1.5, 1.5, {
                             name=k.."_"..v.."_"..i,
                             heading=u[i].w,
@@ -104,7 +140,36 @@ local function createZones()
                                 },
                                 job = Config.Locations[k]['job_names'],
                                 distance = 2.0
-                            })                        
+                            })
+                    else
+                        if v ~= 'blip' and v ~= 'commission' then
+                            -- print(v)
+                            -- local job = false
+                            -- if u[i].job then
+                            --     job = Config.Locations[k]['job_names']
+                            -- end
+                            -- print(u[i])
+                            -- exports['qb-target']:AddBoxZone(k.."_"..v.."_"..i, vector3(u[i].x, u[i].y, u[i].z), 1.5, 1.5, {
+                            --     name=k.."_"..v.."_"..i,
+                            --     heading=u[i].w,
+                            --     minZ = u[i].z-1,
+                            --     maxZ = u[i].z+1,
+                            --     debugPoly=Config.Debug
+                            --     }, {
+                            --         options = {
+                            --             {
+                            --             isServer = u[i].server,
+                            --             event = u[i].event,
+                            --             icon = u[i].icon,
+                            --             label = u[i].label,
+                            --             store = k,
+                            --             type = v
+                            --             },
+                            --         },
+                            --         job = job,
+                            --         distance = 2.0
+                            --     })
+                        end
                     end
                 end
             end
@@ -128,9 +193,16 @@ local function createBlips()
     end
 end
 
+CreateThread(function()
+    createBlips()
+    createZones()
+end)
+
+
 AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
+    Wait(500)
 	QBCore = exports['qb-core']:GetCoreObject()
-    local PlayerData = QBCore.Functions.GetPlayerData()
+    PlayerData = QBCore.Functions.GetPlayerData()
     createBlips()
     createZones()
 	if PlayerData.job.onduty then
@@ -140,19 +212,8 @@ AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
 	end
 end)
 
-RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
-    for i = 1, #Config.Locations do
-        for k,v in pairs(Config.Locations[i]['job_names']) do
-            if v == JobInfo.name then
-                createZones()
-            end
-        end
-    end
-end)
-
 RegisterNetEvent("k-ezjob:Duty", function(data)
     local available = true
-    local PlayerData = QBCore.Functions.GetPlayerData()
     for i = 1,#Config.Locations[data.store]['job_names'] do
         if PlayerData.job.name ~= Config.Locations[data.store]['job_names'][i] then
             available = false
@@ -172,6 +233,7 @@ RegisterNetEvent("k-ezjob:register", function(data)
     for k,v in pairs(Config.Locations[data.store]['job_names']) do
         if v == PlayerData.job.name then
             doPay = false
+            print('dont pay')
         end
     end
     QBCore.Functions.TriggerCallback("k-ezjob:cb:register", function(Registers)
@@ -186,7 +248,7 @@ RegisterNetEvent("k-ezjob:register", function(data)
                     end
                 end
             end
-        end
+        end 
         if doPay then
             menu = {
                 {
@@ -285,7 +347,6 @@ RegisterNetEvent("k-ezjob:stashes", function(data)
     local stashType = data.type
     local items = {}
     local type = 'stash'
-    local cid = nil
     if stashType == 'stash' then
         items = {
             maxweight = Config.Stash[stashType].weight,
@@ -355,23 +416,28 @@ RegisterNetEvent("k-ezjob:foodmenu", function(data)
     exports['qb-menu']:openMenu(menu)
 end)
 
-RegisterNetEvent("k-ezjob:client:station", function(data)
-    local reward = Config.Locations[data.shop]['stations'][data.index]['recipes'][data.item]
+
+RegisterNetEvent("k-ezjob:client:station", function(data) -- shop location target defined same with index, item defined from qb-menu
+    local shop = data.shop
+    local index = data.index
+    local item = data.item
+    local reward = Config.Locations[shop]['stations'][index]['recipes'][item]
     QBCore.Functions.TriggerCallback("k-ezjob:server:cb:recipe", function(cb)
         if cb then
-            if reward.emote then
+            --print(reward.time)
+            if reward.emote then   
                 TriggerEvent('animations:client:EmoteCommandStart', {reward.emote})
-                QBCore.Functions.Progressbar("station_progress"..data.item, reward.label, reward.time, false, false, {
+                QBCore.Functions.Progressbar("station_progress"..reward.item, reward.label, reward.time, false, false, {
                     disableMovement = true,
                     disableCarMovement = true,
                     disableMouse = false,
                     disableCombat = true,
-                }, {}, {}, {}, function()
+                }, {}, {}, {}, function() -- Done
                     TriggerEvent('animations:client:EmoteCommandStart', {"c"})
-                    TriggerEvent("inventory:client:ItemBox", QBCore.Shared.Items[data.item], "add")
+                    TriggerEvent("inventory:client:ItemBox", QBCore.Shared.Items[reward.item], "add")
                 end)
             else
-                QBCore.Functions.Progressbar("station_progress"..data.item, reward.label, reward.time, false, false, {
+                QBCore.Functions.Progressbar("station_progress"..reward.item, reward.label, reward.time, false, false, {
                     disableMovement = true,
                     disableCarMovement = true,
                     disableMouse = false,
@@ -385,11 +451,44 @@ RegisterNetEvent("k-ezjob:client:station", function(data)
                     bone = 28422,
                     coords = reward.pos,
                     rotation = reward.rot,
-                    }, {}, function()
+                    }, {}, function() -- Done
                     StopAnimTask(PlayerPedId(), reward.dict, reward.anim, 1.0)
-                    TriggerEvent("inventory:client:ItemBox", QBCore.Shared.Items[data.item], "add")
+                    TriggerEvent("inventory:client:ItemBox", QBCore.Shared.Items[reward.item], "add")
                 end)
             end
         end
-    end, {reward, data.item})
+    end, reward)
+end)
+
+RegisterNetEvent('k-creator:UseItem', function(itemName,type,int)
+    local emote = 'drink'
+    if type == 'hunger' then
+        emote = 'eat'
+    end
+    TriggerEvent('animations:client:EmoteCommandStart', {emote})
+    QBCore.Functions.Progressbar("snort_coke", "Consuming "..Imports.Items[itemName].label, math.random(3000, 6000), false, false, {
+        disableMovement = false,
+        disableCarMovement = false,
+        disableMouse = false,
+        disableCombat = true,
+    }, {}, {}, {}, function() -- Done
+        TriggerEvent('animations:client:EmoteCommandStart', {"c"})
+        TriggerEvent("inventory:client:ItemBox", Imports.Items[itemName], "remove")
+        if type == 'hunger' then
+            TriggerServerEvent("consumables:server:addHunger", QBCore.Functions.GetPlayerData().metadata["hunger"] + Imports.Items[itemName]['hunger'])
+        elseif type == 'thirst' then            
+            TriggerServerEvent("consumables:server:addThirst", QBCore.Functions.GetPlayerData().metadata["thirst"] + Imports.Items[itemName]['thirst'])
+        elseif type == 'alcohol' then
+            TriggerServerEvent("consumables:server:addThirst", QBCore.Functions.GetPlayerData().metadata["thirst"] + Imports.Items[itemName]['alcohol'])
+            TriggerServerEvent('hud:server:RelieveStress', math.random(2, 4))
+            alcoholCount = alcoholCount + 1
+            AlcoholLoop()
+            if alcoholCount > 1 and alcoholCount < 4 then
+                TriggerEvent("evidence:client:SetStatus", "alcohol", 200)
+            elseif alcoholCount >= 4 then
+                TriggerEvent("evidence:client:SetStatus", "heavyalcohol", 200)
+            end
+        end
+    end, function() -- Cancel
+    end)
 end)
