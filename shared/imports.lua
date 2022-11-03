@@ -77,5 +77,3 @@ Imports.Consumables = { -- outside of these categories you will have to make ur 
     -- },
     -- ['alcohol'] = {}
 }
-
-Imports.Items['thingy'] = {['name'] = 'thingy', ['label'] = 'Food Item', ['weight'] = '20', ['type'] = 'item', ['image'] = 'tosti.png', ['hunger'] = '50', ['thirst'] = 'nil', ['alcohol'] = 'nil', ['unique'] = 'true', ['useable'] = 'true', ['shouldClose'] = 'true', ['combinable'] = nil, ['description'] = 'this is a test item'}
