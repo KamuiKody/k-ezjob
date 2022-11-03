@@ -1,11 +1,10 @@
 Imports = {}
-Imports.Cityhall = { -- this will put jobs in city hall using the following format
-    --['jobname'] = label
-}
-
+Imports.Gangs = {}
 Imports.Jobs = { -- this will add the jobs to the jobs.lua
     ["bishops"] = {
         label = "Bishops Chicken",
+        cityhall = false,
+        startingCash = 10000,
         defaultDuty = true,
         grades = {
             ['0'] = {
@@ -54,6 +53,3 @@ Imports.Items = { -- this will add the items to the items.lua
     ['cup'] 				 	    = {['name'] = 'cup', 			  	  		['label'] = 'Empty Cup', 				['weight'] = 50, 		['type'] = 'item', 		['image'] = 'cup.png', 			            ['unique'] = true, 	['useable'] = true, 	['shouldClose'] = true,	                                                  ['combinable'] = nil,   ['description'] = ''},
 }
 
-Imports.Boss = { 
-    ['bishops'] = 4000,
-}

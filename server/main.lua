@@ -119,20 +119,20 @@ function addStuff()
         end
     end
     if Config.UseExports then
-        QBCore.Debug(Imports.Items)	
-        for k,v in pairs(Imports.Items) do	
-            exports['qb-core']:AddItem(k,v)
-        end
         for k,v in pairs(Imports.Jobs) do		
             exports['qb-core']:AddJob(k,v)
+            if v.cityhall then	
+                exports['qb-cityhall']:AddCityJob(k,v.label)
+            else
+                checkDB(k,v.startingCash,'boss')
+            end
         end
-        for k,v in pairs(Imports.Cityhall) do			
-            exports['qb-cityhall']:AddCityJob(k,v)
-        end
-        for k,v in pairs(Imports.Boss) do		
-            checkDB(k,v)
-        end        
+        for k,v in pairs(Imports.Gangs) do		
+            exports['qb-core']:AddGang(k,v)
+            checkDB(k,v.startingCash,'gang')
+        end    
         for k,v in pairs(Imports.Items) do
+            exports['qb-core']:AddItem(k,v)
             if v['alcohol'] then
                 if tonumber(v['alcohol']) > 0 then
                     QBCore.Functions.CreateUseableItem(k , function(source, item)
@@ -178,8 +178,8 @@ end)
 
 if Config.UseExports then
 
-    function checkDB(job,startbank)
-        local call = MySQL.query.await('SELECT job_name,amount FROM management_funds WHERE type = "boss"', {})
+    function checkDB(job,startbank,type)
+        local call = MySQL.query.await('SELECT job_name,amount FROM management_funds WHERE type = ?', {type})
         local created = false
         for _,v in pairs(call) do
             if v.job_name == job then
@@ -192,7 +192,7 @@ if Config.UseExports then
                 MySQL.Sync.execute('INSERT INTO `management_funds` (`job_name`, `amount`, `type`) VALUES (@job, @amount, @type)', {
                     ['job'] = job,
                     ['amount'] = startbank,
-                    ['type'] = 'boss'
+                    ['type'] = type
                 })
             end)
         end
