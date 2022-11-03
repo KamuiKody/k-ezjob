@@ -1,4 +1,4 @@
-Imports = Imports or {}
+Imports = {}
 Imports.Cityhall = { -- this will put jobs in city hall using the following format
     --['jobname'] = label
 }
@@ -54,26 +54,6 @@ Imports.Items = { -- this will add the items to the items.lua
     ['cup'] 				 	    = {['name'] = 'cup', 			  	  		['label'] = 'Empty Cup', 				['weight'] = 50, 		['type'] = 'item', 		['image'] = 'cup.png', 			            ['unique'] = true, 	['useable'] = true, 	['shouldClose'] = true,	                                                  ['combinable'] = nil,   ['description'] = ''},
 }
 
--------------- Items Below this line are not implimented yet. If you are smart enough to figure them out hats off to you please do not ask for support if you are trying to use stuff below this line.
-Imports.ExperimentalUse = false
 Imports.Boss = { 
     ['bishops'] = 4000,
-}
-
-Imports.Consumables = { -- outside of these categories you will have to make ur own uses for items and what they do. If inside a usable item will be made and a reduction value for ones needs will be added. This piece is something i have been working on it is not functional at this time thank you!
-    -- ['food'] = { -- not yet available for the current qb-release updates for compatibility very soon!
-    --     ['fries'] = math.random(10,25),
-    --     ['chicken_sandwhich'] = math.random(15,35),
-    --     ['death_penalty_sandwhich'] = math.random(20,40),
-    --     ['meathead_burger'] = math.random(15,35),
-    --     ['boneless_wings'] = math.random(15,30),
-    --     ['popcorn_chicken'] = math.random(10,25),
-    --     ['wings'] = math.random(15,35),
-    -- },
-    -- ['drink'] = {
-    --     ['slushy'] = math.random(10,15),
-    --     ['sprunk'] = math.random(10,20),
-    --     ['ecola'] = math.random(10,20),
-    -- },
-    -- ['alcohol'] = {}
 }

@@ -56,10 +56,6 @@ RegisterServerEvent("k-ezjob:pay", function(data)
 end)
 
 RegisterServerEvent("k-ezjob:server:setregister", function(data)
-    print(data.store)
-    print(data.index)
-    print(data.biller)
-    print(data.amount)
     Registers[data.store]= {
         [data.index] = {
             amount = data.amount,
@@ -104,8 +100,6 @@ QBCore.Functions.CreateCallback("k-ezjob:server:cb:recipe", function(source, cb,
     end
 end)
 
-print(GetResourcePath('k-ezjob'))
-
 AddEventHandler('onResourceStart', function(resource) 
     if GetCurrentResourceName() ~= resource then return end
     addStuff()
@@ -140,28 +134,34 @@ function addStuff()
         end        
         for k,v in pairs(Imports.Items) do
             if v['alcohol'] then
-                QBCore.Functions.CreateUseableItem(k , function(source, item)
-                    local src = source
-                    local Player = QBCore.Functions.GetPlayer(src)
-                    if not Player.Functions.RemoveItem(k,1) then return end
-                    TriggerClientEvent('k-creator:UseItem', src, 'alcohol', v['alcohol'])
-                end)
+                if tonumber(v['alcohol']) > 0 then
+                    QBCore.Functions.CreateUseableItem(k , function(source, item)
+                        local src = source
+                        local Player = QBCore.Functions.GetPlayer(src)
+                        if not Player.Functions.RemoveItem(k,1) then return end
+                        TriggerClientEvent('k-creator:UseItem', src, item.name, 'alcohol', tonumber(v['alcohol']))
+                    end)
+                end
             end
             if v['hunger'] then
-                QBCore.Functions.CreateUseableItem(k , function(source, item)
-                    local src = source
-                    local Player = QBCore.Functions.GetPlayer(src)
-                    if not Player.Functions.RemoveItem(k,1) then return end
-                    TriggerClientEvent('k-creator:UseItem', src, 'hunger', v['hunger'])
-                end)
+                if tonumber(v['hunger'])> 0 then
+                    QBCore.Functions.CreateUseableItem(k , function(source, item)
+                        local src = source
+                        local Player = QBCore.Functions.GetPlayer(src)
+                        if not Player.Functions.RemoveItem(k,1) then return end
+                        TriggerClientEvent('k-creator:UseItem', src, item.name, 'hunger', tonumber(v['hunger']))
+                    end)
+                end
             end
             if v['thirst'] then
-                QBCore.Functions.CreateUseableItem(k , function(source, item)
-                    local src = source
-                    local Player = QBCore.Functions.GetPlayer(src)
-                    if not Player.Functions.RemoveItem(k,1) then return end
-                    TriggerClientEvent('k-creator:UseItem', src, item.name,'thirst', v['thirst'])
-                end)
+                if tonumber(v['thirst'])> 0 then
+                    QBCore.Functions.CreateUseableItem(k , function(source, item)
+                        local src = source
+                        local Player = QBCore.Functions.GetPlayer(src)
+                        if not Player.Functions.RemoveItem(k,1) then return end
+                        TriggerClientEvent('k-creator:UseItem', src, item.name, 'thirst', tonumber(v['thirst']))
+                    end)
+                end
             end
         end
         TriggerClientEvent('QBCore:Client:UpdateObject', -1)
