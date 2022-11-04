@@ -393,6 +393,7 @@ end)
 RegisterNetEvent("k-ezjob:foodmenu", function(data)
     local menu = {}
     local dofood = true
+    local PlayerData = QBCore.Functions.GetPlayerData()
     for k,v in pairs(Config.Locations[data.store]['job_names']) do
         if v == PlayerData.job.name then
             dofood = false
