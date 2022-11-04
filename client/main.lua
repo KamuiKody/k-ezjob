@@ -233,7 +233,6 @@ RegisterNetEvent("k-ezjob:register", function(data)
     for k,v in pairs(Config.Locations[data.store]['job_names']) do
         if v == PlayerData.job.name then
             doPay = false
-            print('dont pay')
         end
     end
     QBCore.Functions.TriggerCallback("k-ezjob:cb:register", function(Registers)
@@ -393,6 +392,13 @@ end)
 
 RegisterNetEvent("k-ezjob:foodmenu", function(data)
     local menu = {}
+    local dofood = true
+    for k,v in pairs(Config.Locations[data.store]['job_names']) do
+        if v == PlayerData.job.name then
+            dofood = false
+        end
+    end
+    if not dofood then return end
     for k,v in pairs(Config.Locations[data.store]['stations'][data.index]['recipes']) do
         local disabled = false
         for u in pairs(v.cost) do
