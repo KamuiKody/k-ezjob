@@ -1,4 +1,4 @@
-QBCore = exports['qb-core']:GetCoreObject()
+local QBCore = exports['qb-core']:GetCoreObject()
 local Blip = {}
 local PlayerData = nil
 local onDuty = false
@@ -15,6 +15,10 @@ local hardcordedEvents = {
     ['clothing'] = 'qb-clothing:client:openOutfitMenu',
     ['stations'] = "k-ezjob:foodmenu"
 }
+local tableChoice = QBCore.Shared
+if Config.UseExports then
+    tableChoice = Imports
+end
 
 RegisterNetEvent('QBCore:Client:UpdateObject', function()
 	QBCore = exports['qb-core']:GetCoreObject()
@@ -206,7 +210,7 @@ AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
     createBlips()
     createZones()
 	if PlayerData.job.onduty then
-	    if not QBCore.Shared.Jobs[PlayerData.job.name].defaultDuty then
+	    if not tableChoice.Jobs[PlayerData.job.name].defaultDuty then
 		    TriggerServerEvent("QBCore:ToggleDuty")
 	    end
 	end
@@ -399,7 +403,7 @@ RegisterNetEvent("k-ezjob:foodmenu", function(data)
             dofood = false
         end
     end
-    if not dofood then return end
+    if dofood then return end
     for k,v in pairs(Config.Locations[data.store]['stations'][data.index]['recipes']) do
         local disabled = false
         for u in pairs(v.cost) do
@@ -408,7 +412,7 @@ RegisterNetEvent("k-ezjob:foodmenu", function(data)
             end
         end
         menu[#menu+1] = {
-            header = QBCore.Shared.Items[k].label,
+            header = tableChoice.Items[k].label,
             disabled = disabled,
             params = {
                 event = "k-ezjob:client:station",
@@ -424,11 +428,9 @@ RegisterNetEvent("k-ezjob:foodmenu", function(data)
 end)
 
 
-RegisterNetEvent("k-ezjob:client:station", function(data) -- shop location target defined same with index, item defined from qb-menu
-    local shop = data.shop
-    local index = data.index
-    local item = data.item
-    local reward = Config.Locations[shop]['stations'][index]['recipes'][item]
+RegisterNetEvent("k-ezjob:client:station", function(data) -- shop location target defined same with index, item defined from qb-menu\
+    local reward = Config.Locations[data.shop]['stations'][data.index]['recipes'][data.item]
+    reward.item = data.item
     QBCore.Functions.TriggerCallback("k-ezjob:server:cb:recipe", function(cb)
         if cb then
             --print(reward.time)
@@ -441,7 +443,7 @@ RegisterNetEvent("k-ezjob:client:station", function(data) -- shop location targe
                     disableCombat = true,
                 }, {}, {}, {}, function() -- Done
                     TriggerEvent('animations:client:EmoteCommandStart', {"c"})
-                    TriggerEvent("inventory:client:ItemBox", QBCore.Shared.Items[reward.item], "add")
+                    TriggerEvent("inventory:client:ItemBox", tableChoice.Items[reward.item], "add")
                 end)
             else
                 QBCore.Functions.Progressbar("station_progress"..reward.item, reward.label, reward.time, false, false, {
@@ -460,7 +462,7 @@ RegisterNetEvent("k-ezjob:client:station", function(data) -- shop location targe
                     rotation = reward.rot,
                     }, {}, function() -- Done
                     StopAnimTask(PlayerPedId(), reward.dict, reward.anim, 1.0)
-                    TriggerEvent("inventory:client:ItemBox", QBCore.Shared.Items[reward.item], "add")
+                    TriggerEvent("inventory:client:ItemBox", tableChoice.Items[reward.item], "add")
                 end)
             end
         end
