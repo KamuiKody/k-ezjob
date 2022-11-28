@@ -1,5 +1,5 @@
 Config = {}
-Config.Debug = true
+Config.Debug = false
 Config.UseExports = true -- see shared/imports.lua if true this utilizes item and job exports
 
 Config.Labels = {
@@ -40,7 +40,7 @@ Config.Locations = {
     ['bishops'] = {-- name on the society fund
         ['commission'] = 0.15, 
         ['blip']= {-- blip options
-            active = true,
+            active = false,
             label = "Bishop's Chicken",
             coords = vector3(174.58, -1632.28, 28.9),
             sprite = 106, 
@@ -51,8 +51,8 @@ Config.Locations = {
             [1] = vector4(182.13, -1631.82, 29.4, 304.48),
         },
         ['register'] = { -- creates cash register to charge customer 
-            [1] = vector4(174.58, -1632.28, 28.9, 122.02),
-            [2] = vector4(176.18, -1634.73, 29.0, 137.37),
+            --[1] = vector4(174.58, -1632.28, 28.9, 122.02),
+            [1] = vector4(176.18, -1634.73, 29.0, 137.37),
         },
         ['stash'] = { -- personal stash attached to citizen id
             [1] = vector4(178.71, -1637.31, 29.4, 182.07),
@@ -248,20 +248,6 @@ Config.Locations = {
                         model = "v_ret_fh_bscup", -- model name
                         pos = vector3(0.12, 0.008, 0.03), -- vector3
                         rot = vector3(175.0, 160.0, 270.0) -- vector3
-                    },
-                    ['water_bottle'] = { -- item name of the item rewarded
-                        cost = {
-                            ['cup'] = 1
-                        }, -- [name of the item taken] = number of the item taken
-                        label = 'Dispensing Fluids', -- label for progressbar
-                        time = 5000, -- progressbar time
-                        received = 1, -- how many reward items received
-                        dict = "mini@sprunk", -- animation
-                        anim = "plyr_buy_drink_pt1", -- animation dictionary
-                        flags = 9, -- animation flags
-                        model = "v_ret_fh_bscup", -- model name
-                        pos = vector3(0.12, 0.008, 0.03), -- vector3
-                        rot = vector3(175.0, 160.0, 270.0) -- vector3
                     }
                 }
             },
@@ -291,7 +277,7 @@ Config.Locations = {
                 coord = vector4(179.61, -1631.17, 29.4, 117.06), -- station location
                 icon = "fas fa-cup", -- icon for targeting
                 ['recipes'] = {
-                    ['coffee'] = { -- item name of the item rewarded
+                    ['bcoffee'] = { -- item name of the item rewarded
                         cost = {
                             ['cup'] = 1
                         }, -- [name of the item taken] = number of the item taken
@@ -317,5 +303,274 @@ Config.Locations = {
             --     job = false -- will restrict this to jobs listed above
             -- }
         }
-    }
+    },
+    ['bugershot'] = {-- name on the society fund
+        ['commission'] = 0.15, 
+        ['blip']= {-- blip options
+            active = true,
+            label = "Burger Shot",
+            coords = vector3(-1195.87, -892.76, 14.0),
+            sprite = 106, 
+            color = 1,
+            scale = 0.5
+        },
+        ['duty'] = { -- clock in and clock out 
+            [1] = vector4(-1193.08, -898.55, 14.0, 29.74),
+        },
+        ['register'] = { -- creates cash register to charge customer 
+            [1] = vector4(-1196.54, -891.69, 14.0, 303.13),
+            [2] = vector4(-1195.18, -893.7, 14.0, 306.0),
+            [3] = vector4(-1193.9, -895.57, 14.0, 305.52),
+        },
+        ['stash'] = { -- personal stash attached to citizen id
+            [1] = vector4(-1203.15, -892.05, 14.0, 304.4),
+        },
+        ['job_stash'] = { -- stash only to be opened by this job
+            [1] = vector4(-1203.08, -895.43, 14.0, 130.57),
+        },
+        ['tray'] = { -- public stash
+            [1] = vector4(-1194.43, -894.76, 14.0, 0),
+            [2] = vector4(-1195.91, -892.56, 14.0, 0),
+        },
+        ['job_names'] = { -- names of the job to have access to all except the public stash
+            'bugershot'
+        },
+        ['boss_menu'] = { -- creates a location for the boss to access the boss menu
+            [1] = vector4(-1206.48, -891.52, 14.0, 120.92),
+        },
+        ['clothing'] = { -- creates a place for employees to change clothing
+            [1] = vector4(-1200.72, -887.14, 14.0, 227.09), -- male
+            [2] = vector4(-1202.67, -888.91, 14.0, 232.07), -- female
+        },
+        ['shop'] = { -- a store or armory so to say
+            [1] = {
+                ['coord'] = vector4(-1204.57, -893.64, 14.0, 133.42),
+                ['icon'] = "fas fa-drumstick-bite",
+                ['label'] = 'Ingredients Shop',
+                ['items'] = {
+                    [1] = {
+                        name = "frozen_fries",
+                        price = 50,
+                        amount = 100,
+                        info = {}
+                    },
+                    [2] = {
+                        name = "popcorn_chicken",
+                        price = 50,
+                        amount = 100,
+                        info = {}
+                    },
+                    [3] = {
+                        name = "raw_wings",
+                        price = 100,
+                        amount = 100,
+                        info = {}
+                    },
+                    [4] = {
+                        name = "frozen_boneless",
+                        price = 100,
+                        amount = 100,
+                        info = {}
+                    },
+                    [5] = {
+                        name = "burger_ingredients",
+                        price = 150,
+                        amount = 100,
+                        info = {}
+                    },
+                    [6] = {
+                        name = "special_ingredients",
+                        price = 100,
+                        amount = 100,
+                        info = {}
+                    },
+                    [7] = {
+                        name = "chicken_ingredients",
+                        price = 150,
+                        amount = 100,
+                        info = {}
+                    },
+                    [8] = {
+                        name = "cup",
+                        price = 5,
+                        amount = 100,
+                        info = {}
+                    },
+                }
+            }
+        },
+        ['stations'] = {-- if you use "emote" in this section leave the rest of the anim and prop stuff false
+            [1] = {
+                label = 'Frying Station', -- Label for targeting or drawtext UI [E] will be automatically added
+                coord = vector4(-1201.19, -898.66, 14.0, 123.05), -- station location
+                icon = "fas fa-drumstick-bite", -- icon for targeting
+                ['recipes'] = {
+                    ['fries'] = { -- item name of the item rewarded
+                        item = 'fries', 
+                        cost = {
+                            ['frozen_fries'] = 1
+                        }, -- [name of the item taken] = number of the item taken
+                        label = 'Cooking Fries', -- label for progressbar
+                        time = 5000, -- progressbar time
+                        received = 1, -- how many reward items received
+                        emote = 'bartender', -- emote name if you want to use dpemotes / or you can use the options below
+                        anim = false, -- animation
+                        dict = false, -- animation dictionary
+                        flags = false, -- animation flags
+                        prop = false, -- model name
+                        pos = false, -- vector3
+                        rot = false --vector3
+                    },
+                    ['popcorn_chicken'] = { -- item name of the item rewarded
+                        cost = {
+                            ['frozen_pop_chk'] = 1
+                        }, -- [name of the item taken] = number of the item taken
+                        label = 'Cooking Chicken', -- label for progressbar
+                        time = 5000, -- progressbar time
+                        received = 1, -- how many reward items received
+                        emote = "bartender", -- emote name if you want to use dpemotes
+                    },
+                    ['wings'] = { -- item name of the item rewarded
+                        cost = {
+                            ['raw_wings'] = 1
+                        }, -- [name of the item taken] = number of the item taken
+                        label = 'Cooking Chicken', -- label for progressbar
+                        time = 5000, -- progressbar time
+                        received = 1, -- how many reward items received
+                        emote = "bartender", -- emote name if you want to use dpemotes
+                    },
+                    ['boneless_wings'] = { -- item name of the item rewarded
+                        cost = {
+                            ['frozen_boneless'] = 1
+                        }, -- [name of the item taken] = number of the item taken
+                        label = 'Cooking Chicken', -- label for progressbar
+                        time = 5000, -- progressbar time
+                        received = 1, -- how many reward items received
+                        emote = "bartender", -- emote name if you want to use dpemotes
+                    }
+                }
+            },
+            [2] = {
+                label = 'Grill Cook', -- Label for targeting or drawtext UI [E] will be automatically added
+                coord = vector4(-1202.37, -896.94, 14.0, 132.25), -- station location
+                icon = "fas fa-drumstick-bite", -- icon for targeting
+                ['recipes'] = {
+                    ['meathead_burger'] = { -- item name of the item rewarded
+                        cost = {
+                            ['burger_ingredients'] = 1
+                        }, -- [name of the item taken] = number of the item taken
+                        label = 'Cooking Burger', -- label for progressbar
+                        time = 5000, -- progressbar time
+                        received = 1, -- how many reward items received
+                        emote = "bartender", -- emote name if you want to use dpemotes
+                    },
+                    ['death_penalty_sandwhich'] = { -- item name of the item rewarded
+                        cost = {
+                            ['special_ingredients'] = 1,
+                            ['chicken_ingredients'] = 1
+                        }, -- [name of the item taken] = number of the item taken
+                        label = 'Cooking Sandwhich', -- label for progressbar
+                        time = 5000, -- progressbar time
+                        received = 1, -- how many reward items received
+                        emote = "bartender", -- emote name if you want to use dpemotes
+                    },
+                    ['chicken_sandwhich'] = { -- item name of the item rewarded
+                        cost = {
+                            ['chicken_ingredients'] = 1
+                        }, -- [name of the item taken] = number of the item taken
+                        label = 'Cooking Sandwhich', -- label for progressbar
+                        time = 5000, -- progressbar time
+                        received = 1, -- how many reward items received
+                        emote = "bartender", -- emote name if you want to use dpemotes
+                    }
+                }
+            },
+            [3] = {
+                label = 'Fountain Drinks', -- Label for targeting or drawtext UI [E] will be automatically added
+                coord = vector4(-1197.25, -898.08, 14.0, 121.22), -- station location
+                icon = "fas fa-cup", -- icon for targeting
+                ['recipes'] = {
+                    ['sprunk'] = { -- item name of the item rewarded
+                        cost = {
+                            ['cup'] = 1
+                        }, -- [name of the item taken] = number of the item taken
+                        label = 'Dispensing Fluids', -- label for progressbar
+                        time = 5000, -- progressbar time
+                        received = 1, -- how many reward items received
+                        dict = "mini@sprunk", -- animation
+                        anim = "plyr_buy_drink_pt1", -- animation dictionary
+                        flags = 9, -- animation flags
+                        model = "v_ret_fh_bscup", -- model name
+                        pos = vector3(0.12, 0.008, 0.03), -- vector3
+                        rot = vector3(175.0, 160.0, 270.0) -- vector3
+                    },
+                    ['ecola'] = { -- item name of the item rewarded
+                        cost = {
+                            ['cup'] = 1
+                        }, -- [name of the item taken] = number of the item taken
+                        label = 'Dispensing Fluids', -- label for progressbar
+                        time = 5000, -- progressbar time
+                        received = 1, -- how many reward items received
+                        dict = "mini@sprunk", -- animation
+                        anim = "plyr_buy_drink_pt1", -- animation dictionary
+                        flags = 9, -- animation flags
+                        model = "v_ret_fh_bscup", -- model name
+                        pos = vector3(0.12, 0.008, 0.03), -- vector3
+                        rot = vector3(175.0, 160.0, 270.0) -- vector3
+                    }
+                }
+            },
+            [4] = {
+                label = 'Slushy Machine', -- Label for targeting or drawtext UI [E] will be automatically added
+                coord = vector4(-1198.98, -895.14, 14.0, 126.66), -- station location
+                icon = "fas fa-cup", -- icon for targeting
+                ['recipes'] = {
+                    ['slushy'] = { -- item name of the item rewarded
+                        cost = {
+                            ['cup'] = 1
+                        }, -- [name of the item taken] = number of the item taken
+                        label = 'Dispensing Slushy', -- label for progressbar
+                        time = 5000, -- progressbar time
+                        received = 1, -- how many reward items received
+                        dict = "mini@sprunk", -- animation
+                        anim = "plyr_buy_drink_pt1", -- animation dictionary
+                        flags = 9, -- animation flags
+                        model = "v_ret_fh_bscup", -- model name
+                        pos = vector3(0.12, 0.008, 0.03), -- vector3
+                        rot = vector3(175.0, 160.0, 270.0) -- vector3
+                    }
+                }
+            },
+            [5] = {
+                label = 'Coffee Machine', -- Label for targeting or drawtext UI [E] will be automatically added
+                coord = vector4(-1197.18, -899.86, 14.0, 34.51), -- station location
+                icon = "fas fa-cup", -- icon for targeting
+                ['recipes'] = {
+                    ['bcoffee'] = { -- item name of the item rewarded
+                        cost = {
+                            ['cup'] = 1
+                        }, -- [name of the item taken] = number of the item taken
+                        label = 'Dispensing Coffee', -- label for progressbar
+                        time = 5000, -- progressbar time
+                        received = 1, -- how many reward items received
+                        dict = "mini@sprunk", -- animation
+                        anim = "plyr_buy_drink_pt1", -- animation dictionary
+                        flags = 9, -- animation flags
+                        model = "p_amb_coffeecup_01", -- model name
+                        pos = vector3(0.12, 0.008, 0.03), -- vector3
+                        rot = vector3(175.0, 160.0, 270.0) -- vector3
+                    }
+                }
+            }
+        },        
+        ['activity'] = { -- in case you want a spot for someone to trigger a specific activity like for towing npc tows or what have ya
+            -- [1] = {
+            --     coord = vector4(0,0,0,0),
+            --     label = 'This is a test',
+            --     event = 'k-ezjob:testeventexternal',
+            --     server = false,
+            --     job = false -- will restrict this to jobs listed above
+            -- }
+        }
+    },
 }

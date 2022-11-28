@@ -78,7 +78,8 @@ local function createZones()
                                     label = Config.Labels[v],
                                     store = k,
                                     index = i,
-                                    type = v
+                                    type = v,
+                                    job = k
                                     },
                                 },
                                 job = Config.Locations[k]['job_names'],
@@ -118,13 +119,15 @@ local function createZones()
                                     icon = Config.Icons[v],
                                     label = Config.Labels[v],
                                     store = k,
-                                    type = v
+                                    type = v,
+                                    job = k
                                     },
                                 },
                                 job = Config.Locations[k]['job_names'],
                                 distance = 2.0
                             })
                     elseif v == 'stations' or v == 'shop' then
+                        print(hardcordedEvents[v])
                         exports['qb-target']:AddBoxZone(k.."_"..v.."_"..i, vector3(u[i].coord.x, u[i].coord.y, u[i].coord.z), 1.5, 1.5, {
                             name=k.."_"..v.."_"..i,
                             heading=u[i].coord.w,
@@ -139,7 +142,8 @@ local function createZones()
                                     label = u[i].label,
                                     store = k,
                                     type = v,
-                                    index = i
+                                    index = i,
+                                    job = k
                                     },
                                 },
                                 job = Config.Locations[k]['job_names'],
@@ -210,9 +214,11 @@ AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
     createBlips()
     createZones()
 	if PlayerData.job.onduty then
-	    if not tableChoice.Jobs[PlayerData.job.name].defaultDuty then
-		    TriggerServerEvent("QBCore:ToggleDuty")
-	    end
+        if tableChoice.Jobs[PlayerData.job.name] then
+            if not tableChoice.Jobs[PlayerData.job.name].defaultDuty then
+                TriggerServerEvent("QBCore:ToggleDuty")
+            end
+        end
 	end
 end)
 
@@ -350,6 +356,7 @@ RegisterNetEvent("k-ezjob:stashes", function(data)
     local stashType = data.type
     local items = {}
     local type = 'stash'
+    print(stash)
     if stashType == 'stash' then
         items = {
             maxweight = Config.Stash[stashType].weight,
@@ -400,9 +407,11 @@ RegisterNetEvent("k-ezjob:foodmenu", function(data)
     local PlayerData = QBCore.Functions.GetPlayerData()
     for k,v in pairs(Config.Locations[data.store]['job_names']) do
         if v == PlayerData.job.name then
+            --print(v, PlayerData.job.name)
             dofood = false
         end
     end
+    --print(dofood)
     if dofood then return end
     for k,v in pairs(Config.Locations[data.store]['stations'][data.index]['recipes']) do
         local disabled = false
@@ -411,6 +420,7 @@ RegisterNetEvent("k-ezjob:foodmenu", function(data)
                 disabled = true
             end
         end
+        --print(tableChoice.Items[k].label)
         menu[#menu+1] = {
             header = tableChoice.Items[k].label,
             disabled = disabled,
