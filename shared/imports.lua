@@ -1,11 +1,13 @@
-Imports = {}
-Imports.Gangs = {}
+Imports = Imports or {}
+Imports.Cityhall = { -- this will put jobs in city hall using the following format
+    ['bugershot'] = "Buger Shot",
+}
+
 Imports.Jobs = { -- this will add the jobs to the jobs.lua
     ["bishops"] = {
         label = "Bishops Chicken",
-        cityhall = false,
-        startingCash = 10000,
-        defaultDuty = true,
+        defaultDuty = false,
+        offDutyPay = false,
         grades = {
             ['0'] = {
                 name = "Trainee",
@@ -29,7 +31,35 @@ Imports.Jobs = { -- this will add the jobs to the jobs.lua
                 payment = 350
             }
         }
-    }
+    },
+    ["bugershot"] = {
+        label = "Buger Shot",
+        defaultDuty = false,
+        offDutyPay = false,
+        grades = {
+            ['0'] = {
+                name = "Trainee",
+                payment = 100
+            },
+            ['1'] = {
+                name = "Employee",
+                payment = 200
+            },
+            ['2'] = {
+                name = "Professional Frycook",
+                payment = 250
+            },
+            ['3'] = {
+                name = "Manager",
+                payment = 300
+            },
+            ['4'] = {
+                name = "Owner",
+                isboss = true,
+                payment = 350
+            }
+        }
+    },
 }
 
 Imports.Items = { -- this will add the items to the items.lua
@@ -50,6 +80,30 @@ Imports.Items = { -- this will add the items to the items.lua
     ['sprunk'] 				        = {['name'] = 'sprunk', 			  	    ['label'] = 'Sprunk', 					['weight'] = 150, 		['type'] = 'item', 		['image'] = 'sprunk.png', 		            ['unique'] = true, 	['useable'] = true, 	['shouldClose'] = true,	 ["degrade"] = 10.0, ['trade'] = 'bad_drink',     ['combinable'] = nil,   ['description'] = ''},
     ['ecola'] 				        = {['name'] = 'ecola', 			  	        ['label'] = 'E-Cola', 					['weight'] = 150, 		['type'] = 'item', 		['image'] = 'ecola.png', 		            ['unique'] = true, 	['useable'] = true, 	['shouldClose'] = true,	 ["degrade"] = 10.0, ['trade'] = 'bad_drink',     ['combinable'] = nil,   ['description'] = ''},
     ['slushy'] 				        = {['name'] = 'slushy', 			  	    ['label'] = 'Slushy', 					['weight'] = 150, 		['type'] = 'item', 		['image'] = 'slushy.png', 		            ['unique'] = true, 	['useable'] = true, 	['shouldClose'] = true,	 ["degrade"] = 30.0, ['trade'] = 'cup',           ['combinable'] = nil,   ['description'] = ''},
+    ['bcoffee'] 				    = {['name'] = 'bcoffee', 			  	  	['label'] = 'B Coffee', 				['weight'] = 200, 		['type'] = 'item', 		['image'] = 'coffee.png', 				    ['unique'] = true, 	['useable'] = true, 	['shouldClose'] = true,	 ["degrade"] = 10.0, ['trade'] = 'bad_drink',     ['combinable'] = nil,   ['description'] = 'Pump 4 Caffeine'},
     ['cup'] 				 	    = {['name'] = 'cup', 			  	  		['label'] = 'Empty Cup', 				['weight'] = 50, 		['type'] = 'item', 		['image'] = 'cup.png', 			            ['unique'] = true, 	['useable'] = true, 	['shouldClose'] = true,	                                                  ['combinable'] = nil,   ['description'] = ''},
 }
 
+-------------- Items Below this line are not implimented yet. If you are smart enough to figure them out hats off to you please do not ask for support if you are trying to use stuff below this line.
+Imports.ExperimentalUse = false
+Imports.Boss = { 
+    ['bishops'] = 4000,
+}
+
+Imports.Consumables = { -- outside of these categories you will have to make ur own uses for items and what they do. If inside a usable item will be made and a reduction value for ones needs will be added. This piece is something i have been working on it is not functional at this time thank you!
+    ['food'] = { -- not yet available for the current qb-release updates for compatibility very soon!
+        ['fries'] = math.random(10,25),
+        ['chicken_sandwhich'] = math.random(15,35),
+        ['death_penalty_sandwhich'] = math.random(20,40),
+        ['meathead_burger'] = math.random(15,35),
+        ['boneless_wings'] = math.random(15,30),
+        ['popcorn_chicken'] = math.random(10,25),
+        ['wings'] = math.random(15,35),
+    },
+    ['drink'] = {
+        ['slushy'] = math.random(10,15),
+        ['sprunk'] = math.random(10,20),
+        ['ecola'] = math.random(10,20),
+    },
+    ['alcohol'] = {}
+}

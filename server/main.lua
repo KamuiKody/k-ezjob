@@ -69,7 +69,6 @@ QBCore.Functions.CreateCallback("k-ezjob:server:cb:recipe", function(source, cb,
     local Player = QBCore.Functions.GetPlayer(source)
     for k, v in pairs(reward.cost) do
         local item = Player.Functions.GetItemByName(k)
-        print(v)
         local amount = Player.Functions.GetItemByName(item.name).amount
         if not item or amount < v then
             TriggerClientEvent('QBCore:Notify', source, 'You need '..v..' of '..QBCore.Shared.Items[k].label, 'error', 5000) 
@@ -119,20 +118,26 @@ function addStuff()
         end
     end
     if Config.UseExports then
+        --QBCore.Debug(Imports.Items)	
+        for k,v in pairs(Imports.Items) do	
+            exports['qb-core']:AddItem(k,v)
+        end
         for k,v in pairs(Imports.Jobs) do		
             exports['qb-core']:AddJob(k,v)
+            if v.startingCash then
+                checkDB(k,v.startingCash)
+            end
             if v.cityhall then	
                 exports['qb-cityhall']:AddCityJob(k,v.label)
-            else
-                checkDB(k,v.startingCash,'boss')
             end
         end
-        for k,v in pairs(Imports.Gangs) do		
-            exports['qb-core']:AddGang(k,v)
-            checkDB(k,v.startingCash,'gang')
-        end    
+        for k,v in pairs(Imports.Cityhall) do			
+            exports['qb-cityhall']:AddCityJob(k,v)
+        end
+        for k,v in pairs(Imports.Boss) do		
+            checkDB(k,v)
+        end        
         for k,v in pairs(Imports.Items) do
-            exports['qb-core']:AddItem(k,v)
             if v['alcohol'] then
                 if tonumber(v['alcohol']) > 0 then
                     QBCore.Functions.CreateUseableItem(k , function(source, item)
@@ -178,8 +183,8 @@ end)
 
 if Config.UseExports then
 
-    function checkDB(job,startbank,type)
-        local call = MySQL.query.await('SELECT job_name,amount FROM management_funds WHERE type = ?', {type})
+    function checkDB(job,startbank)
+        local call = MySQL.query.await('SELECT job_name FROM management_funds WHERE type = "boss"', {})
         local created = false
         for _,v in pairs(call) do
             if v.job_name == job then
@@ -188,11 +193,12 @@ if Config.UseExports then
             end
         end
         if not created then
+            print('how did i get here')
             MySQL.ready(function()
                 MySQL.Sync.execute('INSERT INTO `management_funds` (`job_name`, `amount`, `type`) VALUES (@job, @amount, @type)', {
                     ['job'] = job,
                     ['amount'] = startbank,
-                    ['type'] = type
+                    ['type'] = 'boss'
                 })
             end)
         end
