@@ -127,7 +127,6 @@ local function createZones()
                                 distance = 2.0
                             })
                     elseif v == 'stations' or v == 'shop' then
-                        print(hardcordedEvents[v])
                         exports['qb-target']:AddBoxZone(k.."_"..v.."_"..i, vector3(u[i].coord.x, u[i].coord.y, u[i].coord.z), 1.5, 1.5, {
                             name=k.."_"..v.."_"..i,
                             heading=u[i].coord.w,
@@ -356,7 +355,6 @@ RegisterNetEvent("k-ezjob:stashes", function(data)
     local stashType = data.type
     local items = {}
     local type = 'stash'
-    print(stash)
     if stashType == 'stash' then
         items = {
             maxweight = Config.Stash[stashType].weight,

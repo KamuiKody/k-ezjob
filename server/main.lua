@@ -192,7 +192,6 @@ if Config.UseExports then
                 break
             end
         end
-        print(created)
         if not created then
             print('how did i get here')
             MySQL.ready(function()
